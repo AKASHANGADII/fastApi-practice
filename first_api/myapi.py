@@ -138,6 +138,14 @@ def alter_student(*,usn:str=Path(None,description="A unique key to identify the 
       i['courses']=student.courses
       return i  
   return {"message":"student data doesn't exist"}
+
+@app.delete('/delete-student/{usn}')
+def delete_student(usn:str=Path(None,description="A unique key to identify the student")):
+  for i in students:
+    if i['usn']==usn:
+      students.remove(i)
+      return {"message":"Deleted user"}
+  return {"message":"student data doesn't exist"}
 #to run : uvicorn myapi:app --reload
 #Add data
 # {
