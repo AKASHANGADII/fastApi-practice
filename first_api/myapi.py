@@ -1,5 +1,5 @@
 from fastapi import FastAPI,Path
-from pydantic import BaseModel
+from models import *
 
 app=FastAPI()
 
@@ -78,14 +78,7 @@ students=[
   }
 ]
 
-class Student(BaseModel):
-    usn: str
-    sr_no: str
-    name: str
-    dob: str
-    sem: str
-    section: str
-    courses: list[str]
+
     
 
 @app.get('/')
@@ -111,4 +104,55 @@ def create_student(*,usn:str=Path(None,description="A unique key to identify the
         else:
             students.append(student)
         return student
+
+@app.patch('/update-student/{usn}')
+def update_student(*,usn:str=Path(None,description="A unique key to identify the student"),updateStudent:UpdateStudent):
+  for i in students:
+    if i['usn']==usn:
+      if updateStudent.name!=None:
+        i['name']=updateStudent.name
+      if updateStudent.dob!=None:
+        i['dob']=updateStudent.dob
+      if updateStudent.sr_no!=None:
+        i['sr_no']=updateStudent.sr_no
+      if updateStudent.sem!=None:
+        i['sem']=updateStudent.sem
+      if updateStudent.section!=None:
+        i['section']=updateStudent.section
+      if updateStudent.courses!=None:
+        i['courses']=updateStudent.courses
+  
+  return {"message student data doesn't exist"}
+      
+
 #to run : uvicorn myapi:app --reload
+#Add data
+# {
+#     "usn": "01jst20cs038",
+#     "sr_no": "200027",
+#     "name": "Brahma Keerthi",
+#     "dob": "07062002",
+#     "sem": "5",
+#     "section": "B5",
+#     "courses": [
+#       "20cs510",
+#       "20cs520",
+#       "20cs540",
+#       "20cs552"
+#     ]
+#   }
+#Update student data
+# {
+#     "usn": "01jst20cs013",
+#     "sr_no": "202037",
+#     "name": "Akash N",
+#     "dob": "22032002",
+#     "sem": "5",
+#     "section": "B5",
+#     "courses": [
+#       "20cs510",
+#       "20cs520",
+#       "20cs540",
+#       "20cs552"
+#     ]
+#   }
