@@ -121,10 +121,23 @@ def update_student(*,usn:str=Path(None,description="A unique key to identify the
         i['section']=updateStudent.section
       if updateStudent.courses!=None:
         i['courses']=updateStudent.courses
+      return i
   
-  return {"message student data doesn't exist"}
+  return {"message":"student data doesn't exist"}
       
-
+@app.put('/alter-student/{usn}')
+def alter_student(*,usn:str=Path(None,description="A unique key to identify the student"),student:Student):
+  for i in students:
+    if i['usn']==usn:
+      i['usn']=student.usn
+      i['sr_no']=student.sr_no
+      i['name']=student.name
+      i['dob']=student.dob
+      i['sem']=student.sem
+      i['section']=student.section
+      i['courses']=student.courses
+      return i  
+  return {"message":"student data doesn't exist"}
 #to run : uvicorn myapi:app --reload
 #Add data
 # {
